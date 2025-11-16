@@ -1,47 +1,22 @@
+import string
 import hashlib
-import time
-import threading
+import itertools
 
-def worker(start, end, salt, result):
-    for password in range(start, end):
-        attempt = salt + str(password)
-        hash_result = hashlib.md5(attempt.encode()).hexdigest()
-        
-        if hash_result.startswith("0e") and hash_result[2:].isdigit():
-            result['found'] = password
-            return
+def md5_zero_gen(prefix_salt, chars):
+    word_len = 1
+    while True:
+        for i in itertools.permutations(chars, word_len):
+            word = "".join(i)
+            text = prefix_salt + word
+            hash = hashlib.md5(text.encode()).hexdigest()
+            if hash[:2] == "0e" and hash[2:].isdecimal():
+                return word
+        word_len += 1
 
-def fast_find_magic_password():
-    salt = "f789bbc328a3d1a3"
-    result = {'found': None}
-    threads = []
-    num_threads = 4
-    
-    print(f"🚀 Starting {num_threads} threads to find magic password...")
-    start_time = time.time()
-    
-    # Split work among threads
-    chunk_size = 10000000  # 10 million per thread
-    
-    for i in range(num_threads):
-        start = i * chunk_size
-        end = start + chunk_size
-        thread = threading.Thread(target=worker, args=(start, end, salt, result))
-        threads.append(thread)
-        thread.start()
-    
-    # Wait for any thread to find it
-    while result['found'] is None:
-        time.sleep(1)
-        # You could add a progress counter here
-    
-    # Stop all threads
-    for thread in threads:
-        thread.join()
-    
-    elapsed = time.time() - start_time
-    print(f"\n🎉 FOUND: {result['found']}")
-    print(f"⏱️  Time: {elapsed:.2f} seconds")
-    return result['found']
+chars = string.ascii_lowercase + "0123456789"
+hash = "0e902564435691274142490923013038"
+salt = "f789bbc328a3d1a3"
 
-fast_find_magic_password()
+print(f"Generating an MD5 with prefix salt '{salt}' that evaluates to '0' as a scientific notation...")
+passwd = md5_zero_gen(salt, chars)
+print(f"Valid password: {passwd}")
