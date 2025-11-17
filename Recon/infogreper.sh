@@ -1,4 +1,9 @@
 #!/bin/bash	
+
+
+# This SCRIPT does not belong to me, i simply got it from TCM academy in there BUG BOUNTY course with the monthly subscription.
+
+
 url=$1
 if [ ! -d "$url" ];then
 	mkdir $url
