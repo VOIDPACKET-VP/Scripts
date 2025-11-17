@@ -1,8 +1,9 @@
 #!/bin/bash	
 
-
 # This SCRIPT does not belong to me, i simply got it from TCM academy in there BUG BOUNTY course with the monthly subscription.
 
+# !! Some tools used here are very aggressive, so if you decided to use it in a bug bounty program make sure to limit the requests
+# to the set amount by the program, use DEEPSEEK or any LLM to help you with that, but make sure it's working properly. !!
 
 url=$1
 if [ ! -d "$url" ];then
